@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="javafx" name="liblary">
+    <output-path>$PROJECT_DIR$/out/artifacts/liblary</output-path>
+    <root id="root">
+      <element id="archive" name="liblary.jar">
+        <element id="module-output" name="liblary" />
+      </element>
+    </root>
+  </artifact>
+</component>
