@@ -2,9 +2,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+/**
+ * The type My frame.
+ */
 public class MyFrame extends JFrame implements ActionListener
 {
-    SecondFrame secondFrame;
+   
+    /**
+     * The Second frame.
+     */
+    public SecondFrame secondFrame;
     @Override
     public void actionPerformed(ActionEvent evt) {
 
@@ -12,11 +20,22 @@ public class MyFrame extends JFrame implements ActionListener
 
        this.setVisible(false);
     }
+
+    /**
+     * Convert to multiline string.
+     *
+     * @param orig the orig
+     * @return the string
+     */
     public static String convertToMultiline(String orig)
     {
         return "<html>" + orig.replaceAll("\n", "<br>");
     }
     private JPanel panel;
+
+    /**
+     * Instantiates a new My frame.
+     */
     public MyFrame(){
         super("Sprawdzacz kolokwiów") ;
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -1,15 +1,38 @@
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+/**
+ * The type Load.
+ */
 public class Load
 {
-    List<Question> examQuestion;
-    List<Answer> examAnswer;
+    /**
+     * The Exam question.
+     */
+    List<Question> examQuestion = new ArrayList<>();
+    /**
+     * The Exam answer.
+     */
+    List<Answer> examAnswer = new ArrayList<>();
+    /**
+     * The Quest.
+     */
     Question quest;
-    Answer answr;
+    /**
+     * The Answr.
+     */
+    Answer answr ;
+
+    /**
+     * Load exam.
+     *
+     * @param fileName the file name
+     */
     void LoadExam(String fileName)
     {
 
@@ -19,8 +42,11 @@ public class Load
         try
         {
             br = new BufferedReader(new FileReader(fileName));
-            while((line = br.readLine()) != null){
+            while((line = br.readLine()) != null)
+            {
+
                 String[] qua = line.split(cvsSplitBy);
+                quest=new Question();
                 quest.questionNumber = Integer.parseInt(qua[0]);
                 quest.contentOfQuestion = qua[1];
                 quest.firstAnswer = qua[2];
@@ -29,6 +55,8 @@ public class Load
                 quest.fourthAnswer = qua[5];
                 quest.goodAnswer = Integer.parseInt(qua[6]);
                 quest.pointsForQuestion = Integer.parseInt(qua[7]);
+                examQuestion.add(quest);
+
             }
         }catch (FileNotFoundException e)
         {
@@ -45,6 +73,11 @@ public class Load
         }
     }
 
+    /**
+     * Load answer.
+     *
+     * @param fileName the file name
+     */
     void LoadAnswer(String fileName)
     {
         BufferedReader br = null;
@@ -54,10 +87,12 @@ public class Load
         try
         {
             br = new BufferedReader(new FileReader(fileName));
-            while((line = br.readLine()) != null){
+            while((line = br.readLine()) != null)
+            {   answr= new Answer();
                 String[] qua = line.split(cvsSplitBy);
                 answr.questionNumber = Integer.parseInt(qua[0]);
-                quest.goodAnswer = Integer.parseInt(qua[1]);
+                answr.goodAnswer = Integer.parseInt(qua[1]);
+                examAnswer.add(answr);
             }
         }catch (FileNotFoundException e)
         {
@@ -73,4 +108,34 @@ public class Load
                 }
         }
     }
+
+    /**
+     * Save result.
+     *
+     * @param result the result
+     */
+    void SaveResult(Examresult result,List<Question> examQuestion)
+    {
+    String path = "Wyniki.csv";
+
+    Exam exam=new Exam();
+    int a;
+    a=exam.calculateNote(examQuestion,result);
+    ArrayList<Examresult> out  =new ArrayList<>();
+    String s;
+    s=result.points+","+result.goodAnswers+","+result.badAnswers+","+a;
+    try{
+
+        File file = new File(path);
+        if(!file.exists()){
+            file.createNewFile();
+        }
+        FileWriter fileWriter = new FileWriter(file,true);
+        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+        bufferedWriter.write(s);
+        bufferedWriter.newLine();
+        bufferedWriter.close();
+    }catch(IOException ex){
+        System.out.print("Nie mogę zapisać pliku");
+    }}
 }
