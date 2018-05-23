@@ -1,0 +1,90 @@
+Michał Bojzan Lab 6 ASSO
+
+1. Zainstaluj i uruchom serwer www –nginxna maszynie wirtualnej serwera.
+
+apt-get install nginx 
+/etc/init.d/nginx start
+
+
+2. Uzupełnij konfigurację serwera DNS o dodatkowe aliasy:
+site01.asso.local
+site02.asso.local
+site03.asso.local
+db.asso.local
+
+In db.asso.local
+
+site01.asso.local IN CNAME
+site02.asso.local IN CNAME
+site03.asso.local IN CNAME
+db.asso.local     IN CNAME 
+
+
+3. Do poprawnego rozwiązywania nazw DNS w sieci lokalnej konieczne
+mogą okazać się zmiany w konfiguracji maszyny wirtualnej klienta i
+serwera.
+•
+zmiana/uzupełnienie w pliku
+/etc/host.conf
+order bind,hosts
+•
+zmiana/uzupełnienie w pliku
+/etc/nsswitch.conf
+hosts:  dns files
+•
+zmiana/uzupełnienie w pliku
+/etc/bind/named.conf.options
+dnssec-enable no;
+dnssec-validation no;
+4. Skonfiguruj
+nginx
+tak aby dostępne były trzy różne strony www:
+•
+site01.asso.local
+•
+site02.asso.local
+•
+site03.asso.local
+
+server {
+listen   80;
+root /usr/share/nginx/www-test1;
+index index.html index.htm index.php;
+server_name test1;
+access_log /var/log/nginx/access.test1.log;
+
+location ~ \.php$ {
+include /etc/nginx/fastcgi_params;
+fastcgi_pass unix:/tmp/php5-fpm.sock;
+fastcgi_index index.php;
+fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+}
+}[/
+
+5. Zainstaluj i uruchom serwer bazy danych
+PostgreSQL
+na maszynie
+wirtualnej serwera.
+1
+•
+Skonfiguruj tak serwer bazy danych aby był dostępny z maszyny
+wirtualnej serwera pod adresem
+db.asso.local
+(plik konfigura-
+cyjny
+/etc/postgresql/9.6/main/postgresql.conf
+)
+•
+Utwórz bazę danych, użytkownika, tabelę oraz wypełnij ją da-
+nymi.
+•
+Skonfiguruj zdalny dostęp dla użytkownika, bazy danych tylko
+dla adresu IP maszyny wirtualnej klienta (plik konfiguracyjny
+/etc/postgresql/9.6/main/pg_hba.conf
+).
+•
+Połącz się z bazą danych z maszyny wirtualnej klienta (należy
+zainstalować pakiet
+postgresql-clent
+).
+psql -U ... -d ... -h db.as
